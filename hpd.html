@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOVIE BDAY</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            background-color: #fce4ec;
+            overflow: hidden;
+            position: relative;
+        }
+
+
+        .balloons { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .balloon { position: absolute; font-size: 3em; animation: float-up linear infinite; }
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+        .balloon:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; color: #ff6f61; }
+        .balloon:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 3s; color: #6a1b9a; }
+        .balloon:nth-child(3) { left: 50%; animation-duration: 18s; animation-delay: 6s; color: #ffeb3b; }
+        .balloon:nth-child(4) { left: 70%; animation-duration: 14s; animation-delay: 9s; color: #4db6ac; }
+        .balloon:nth-child(5) { left: 90%; animation-duration: 16s; animation-delay: 12s; color: #f06292; }
+
+
+        #confetti-container { position: absolute; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 999; }
+        .confetti { position: absolute; width: 10px; height: 10px; background-color: transparent; border-radius: 50%; transform: rotate(45deg); opacity: 0; animation: fall 3s ease-in-out forwards; }
+        @keyframes fall {
+            0% { opacity: 1; transform: translateY(-10vh) rotate(45deg) scale(0.5); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(1); }
+        }
+
+
+        h1 {
+            background: linear-gradient(90deg, #ff99e6, #fff, #99ffeb, #fff, #ff99e6);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 5s infinite linear;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            padding: 15px 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes shimmer { to { background-position: -300% 0; } }
+        
+
+        #initial-screen { 
+            cursor: pointer;
+            padding: 50px; background-color: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6); 
+            transition: transform 0.3s ease-in-out; z-index: 10; 
+        }
+        #initial-screen:hover { transform: scale(1.05); }
+
+        #countdown-display {
+            font-size: 1.5em;
+            color: #ff6f61;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .mail-icon { font-size: 8em; display: block; margin-bottom: 10px; }
+        .open-text { font-size: 2.5em; font-weight: bold; color: #ff6f61; }
+        .locked-text { font-size: 1.2em; color: #777; margin-top: 10px; }
+
+        /* Other element styles remain the same (jiggle, letters, modal, etc.) */
+        #main-greeting { display: none; opacity: 0; flex-direction: column; align-items: center; transition: opacity 1s; }
+        @keyframes jiggle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .letter-container { display: flex; gap: 15px; margin-top: 30px; padding: 25px; background-color: rgba(255, 255, 255, 0.95); border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); }
+        .letter-btn { background-image: linear-gradient(145deg, #ffd700, #ff8c00); border: 3px solid #fff; color: white; padding: 15px 28px; font-size: 1.8em; font-weight: bold; border-radius: 50px; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; box-shadow: 0 5px #c79100; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); animation: jiggle 2s ease-in-out infinite alternate; }
+        .letter-btn:active { transform: translateY(5px); box-shadow: 0 0 #c79100; }
+        #secret-mail-btn { cursor: pointer; margin-top: 50px; padding: 25px 40px; background-color: white; border-radius: 5px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease-in-out, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 20px; border: 8px solid transparent; border-image: repeating-linear-gradient( -45deg, #2196f3 0, #2196f3 10px, #ff6b6b 10px, #ff6b6b 20px, #fff 20px, #fff 30px ) 5; }
+        #candle-wish-container { margin-top: 40px; display: none; align-items: center; gap: 15px; padding: 15px 30px; background-color: rgba(255, 255, 255, 0.9); border-radius: 30px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: transform 0.2s; }
+        .candle-icon { font-size: 3em; line-height: 1; text-shadow: 0 0 10px rgba(255, 165, 0, 0.8), 0 0 5px rgba(255, 255, 0, 0.8); }
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px); z-index: 1000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
+        .modal-content { transition: background-color 0.5s, border 0.5s, box-shadow 0.5s; background-color: #fff; padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(255, 69, 0, 0.8); border: 5px solid #ff4500; max-width: 85%; min-width: 350px; text-align: center; }
+        .modal-content.parchment-style { background-color: #fff8dc; border-radius: 10px; box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5); border: 3px dashed #8b0000; }
+        .modal-content h2 { color: #d81b60; margin-top: 0; font-size: 2.5em; }
+        .modal-content.parchment-style h2 { font-family: 'Dancing Script', cursive; color: #8b0000; text-decoration: underline; }
+        .close-btn { background-image: linear-gradient(45deg, #ff6b6b, #ffa07a); color: white; border: none; padding: 12px 20px; font-size: 1.8em; line-height: 1; margin-top: 25px; cursor: pointer; border-radius: 50px; box-shadow: 0 5px 10px rgba(255, 100, 100, 0.6); transition: transform 0.2s ease-in-out, box-shadow 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+        button:focus, #initial-screen:focus, #secret-mail-btn:focus, #candle-wish-container:focus { outline: 3px solid #ff4500; outline-offset: 5px; border-radius: 15px; }
+
+    </style>
+</head>
+<body>
+
+    <audio id="horn-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-party-horn-sound-1971.mp3" preload="auto"></audio>
+    <audio id="twinkle-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-small-bell-and-chime-908.mp3" preload="auto"></audio>
+
+    <div id="confetti-container"></div>
+    <div class="balloons">
+        <span class="balloon">🎈</span><span class="balloon">🎁</span><span class="balloon">🎉</span>
+        <span class="balloon">🎂</span><span class="balloon">🎈</span>
+    </div>
+
+    <div id="initial-screen" onclick="checkUnlockAndOpen()" tabindex="0">
+        <h1 id="countdown-display">IT'S TIME!</h1>
+        <span class="mail-icon">✉️</span>
+        <div class="open-text">Tap to Open Me!</div>
+        <p class="locked-text" id="lock-message">The magic is ready for you!</p>
+    </div>
+
+    <div id="main-greeting">
+        <h1 id="main-title">Happy Birthday!</h1>
+        
+        <div class="letter-container">
+            <button class="letter-btn" onclick="showMessage('H', 'Hope your day is filled with joy! 🎉')" tabindex="0">H</button>
+            <button class="letter-btn" onclick="showMessage('A', 'A day just for you to celebrate! 🎁')" tabindex="0">A</button>
+            <button class="letter-btn" onclick="showMessage('P', 'Presents and cake are on the way! 🍰')" tabindex="0">P</button>
+            <button class="letter-btn" onclick="showMessage('P', 'Pak! Sana magustuhan mo surprise ko HIHI. 🥳')" tabindex="0">P</button>
+            <button class="letter-btn" onclick="showMessage('Y', 'YOLO! Kaya enjoy your life to the fullest Lovieee! ✨')" tabindex="0">Y</button>
+            
+            <span style="font-size: 2em; margin: 0 10px; color: #d81b60;">&</span>
+
+            <button class="letter-btn" onclick="showMessage('B', 'Bet kita LOVIE HAHAHAHA! 🎈')" tabindex="0">B</button>
+            <button class="letter-btn" onclick="showMessage('D', 'Don\'t forget to make a wish. Click mo jan sa baba later! 🌟')" tabindex="0">D</button>
+            <button class="letter-btn" onclick="showMessage('A', 'ALWAYS PRAYING FOR YOUR HEALTH AND SAFETY! 💖')" tabindex="0">A</button>
+            <button class="letter-btn" onclick="showMessage('Y', 'You deserve all the happiness! I LOIVE YOU SO MUCH LOVIE! 💯')" tabindex="0">Y</button>
+        </div>
+
+        <div id="secret-mail-btn" onclick="openSecretLetter()" tabindex="0">
+            <span class="icon">💌</span>
+            <span class="text">You've got a letter!</span>
+        </div>
+        
+        <div id="candle-wish-container" onclick="blowOutCandle()" tabindex="0">
+            <span id="candle-icon" class="candle-icon">🎂</span>
+            <span class="text" style="color:#d81b60; font-weight:bold;">Make a Wish!</span>
+        </div>
+
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-letter"></h2>
+            <p id="modal-message"></p>
+            <p>Happy Birthday! 🥳🎂🎉</p>
+            <button class="close-btn" onclick="closeModal()" tabindex="0">❤️</button>
+        </div>
+    </div>
+
+    <script>
+
+        const recipientName = "LOVIEE KO";
+        const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+
+        const targetDate = new Date("October 1, 2025 00:00:00").getTime();
+        let isUnlocked = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainTitle = document.getElementById('main-title');
+            mainTitle.innerText = `Happy Birthday, ${recipientName}!`;
+            
+
+            
+            startCountdown();
+        });
+
+        function startCountdown() {
+            const countdownDisplay = document.getElementById('countdown-display');
+            const initialScreen = document.getElementById('initial-screen');
+            const lockMessage = document.getElementById('lock-message');
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+
+                    clearInterval(interval);
+                    isUnlocked = true;
+                    initialScreen.classList.add('unlocked');
+                    countdownDisplay.innerText = "IT'S TIME!";
+                    lockMessage.innerText = "The magic is ready for you! Tap to Open!";
+
+                } else {
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    countdownDisplay.innerText = 
+                        `${days > 0 ? days + "d " : ""}${hours}h ${minutes}m ${seconds}s`;
+                    lockMessage.innerText = 
+                        "The magic is still brewing! Check back at midnight on October 1st!";
+                    initialScreen.classList.remove('unlocked');
+                }
+            }, 1000);
+        }
+        
+
+        function checkUnlockAndOpen() {
+            if (isUnlocked) {
+                openCard();
+            } else {
+                // alert("Not yet, Loviee! Check the countdown!"); 
+            }
+        }
+
+        // --- Confetti Generation Logic (unchanged) ---
+        function createConfetti(num) {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#ffeb3b', '#4db6ac', '#f06292', '#9c27b0'];
+            for (let i = 0; i < num; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                c.style.left = `${Math.random() * 100}vw`;
+                c.style.top = `${Math.random() * -20}vh`;
+                c.style.animationDuration = `${Math.random() * 1.5 + 2}s`;
+                c.style.animationDelay = `${Math.random() * 0.5}s`;
+                container.appendChild(c);
+            }
+            setTimeout(() => { container.innerHTML = ''; }, 3000);
+        }
+
+        // --- Core Interaction Logic (unchanged) ---
+        function openCard() {
+            const initial = document.getElementById('initial-screen');
+            const greeting = document.getElementById('main-greeting');
+            const horn = document.getElementById('horn-sound');
+
+            if (!isUnlocked) return; 
+
+            createConfetti(50);
+            horn.play();
+            
+            initial.style.opacity = '0';
+            
+            setTimeout(() => {
+                initial.style.display = 'none';
+                greeting.style.display = 'flex';
+                setTimeout(() => {
+                    greeting.style.opacity = '1';
+                    document.getElementById('candle-wish-container').style.display = 'flex'; 
+                }, 10);
+            }, 300);
+        }
+
+        function showMessage(letter, message) {
+            const modalContent = document.querySelector('.modal-content');
+            const twinkle = document.getElementById('twinkle-sound');
+
+            twinkle.play();
+            modalContent.classList.remove('parchment-style');
+            
+            document.getElementById('modal-letter').innerText = `It's the letter "${letter}"!`;
+            document.getElementById('modal-message').innerText = message;
+            
+            openModal();
+        }
+
+        function openSecretLetter() {
+            const modalContent = document.querySelector('.modal-content');
+            document.getElementById('twinkle-sound').play();
+
+            modalContent.classList.add('parchment-style');
+
+            document.getElementById('modal-letter').innerText = 'A Special Message Just For You!';
+            document.getElementById('modal-message').innerHTML = `
+                Wishing you an abundance of joy, laughter, and everything wonderful on your special day. Thank you so much loviee for being the best blessing and partner for me. No words can express how blessed and grateful I am kasi ikaw girlfriend ko HIHI. HAPPIEST 20TH BIRTHDAY TO YOU MY LOVE. Ayaw ko na pahabain message ko kasi gusto ko mag enjoy ka. WISHING YOU ALL THE BEST THE WORLD HAS TO OFFER PARA SAYO MAHAL KO. GOD BLESS AND MORE BIRTHDAYS TO COME MY LOVE.
+                May all your dreams come true, ${recipientName}! ✨
+            `;
+            
+            openModal();
+        }
+        
+        function openModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.opacity = '0';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+
+        // --- Candle Blow-Out Logic (unchanged) ---
+        function blowOutCandle() {
+            const candle = document.getElementById('candle-icon');
+            const container = document.getElementById('candle-wish-container');
+
+            candle.innerText = '💨'; 
+            candle.style.textShadow = 'none';
+            container.style.cursor = 'default';
+            container.onclick = null;
+
+            document.querySelector('.modal-content').classList.remove('parchment-style');
+            
+            document.getElementById('modal-letter').innerText = 'Wish Granted!';
+            document.getElementById('modal-message').innerText = `The candle is out! Your wish is safe, ${recipientName}. Have the best birthday ever!`;
+
+            openModal();
+        }
+    </script>
+</body>
